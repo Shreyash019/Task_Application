@@ -10,7 +10,10 @@ import taskRoutes from "./modules/todo_module/TaskRoutes"
 const PORT: number = parseInt(process.env.PORT || "5000");
 const app:Application = express()
 const corsOptions = {
-  origin: '*', // Allow all origins
+  origin: [
+    '*',
+    "https://task-client-fiae.onrender.com"
+  ], // Allow all origins
   credentials: true, // Allow cookies to be sent
   optionsSuccessStatus: 200,
 };
