@@ -16,7 +16,7 @@ const path_1 = __importDefault(require("path"));
 const PORT = parseInt(process.env.PORT || "5000");
 const app = (0, express_1.default)();
 const corsOptions = {
-    origin: "https://task-client-fiae.onrender.com", // Allow all origins
+    origin: ["https://task-client-fiae.onrender.com", "https://incredible-kashata-1b5e11.netlify.app"], // Allow all origins
     credentials: true, // Allow cookies to be sent
     optionsSuccessStatus: 200,
 };
