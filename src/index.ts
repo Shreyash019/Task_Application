@@ -28,6 +28,7 @@ databaseConnection.mongodbConnection()
 
 // Custom error handling for unauthorized access
 app.use((err:any, req:Request, res:Response, next:NextFunction) => {
+  console.log(req.cookies)
   console.log(req.url)
   next();
 });
