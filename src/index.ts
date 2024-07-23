@@ -20,6 +20,10 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(passport.initialize());
+// Trust proxy headers for cookies and secure settings
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1); // Trust the first proxy
+}
 
 // Database instance creation then connecting database
 const databaseConnection = new Database_Connection();
