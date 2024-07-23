@@ -44,7 +44,7 @@ app.get("/user/hello", (req:Request, res:Response)=>{
 })
 
 
-app.all("*", (req:Request, res:Response)=>{
+app.get("*", (req:Request, res:Response)=>{
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 })
 
