@@ -10,23 +10,16 @@ import taskRoutes from "./modules/todo_module/TaskRoutes"
 const PORT: number = parseInt(process.env.PORT || "5000");
 const app:Application = express()
 const corsOptions = {
-  origin: [
-    '*',
-    "https://task-client-fiae.onrender.com"
-  ], // Allow all origins
+  origin: "https://task-client-fiae.onrender.com", // Allow all origins
   credentials: true, // Allow cookies to be sent
   optionsSuccessStatus: 200,
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(cookieParser());
 app.use(express.json());
 app.use(passport.initialize());
-// Trust proxy headers for cookies and secure settings
-if (process.env.NODE_ENV === 'production') {
-  app.set('trust proxy', 1); // Trust the first proxy
-}
 
 // Database instance creation then connecting database
 const databaseConnection = new Database_Connection();
