@@ -42,18 +42,18 @@ app.get("/user/hello", (req:Request, res:Response)=>{
 })
 
 
-app.all("*", (req:Request, res:Response)=>{
-  res.redirect(String(process.env.REDIRECTION_URL))
-})
+// app.all("*", (req:Request, res:Response)=>{
+//   res.redirect(String(process.env.REDIRECTION_URL))
+// })
 
 
-// Custom error handling for unauthorized access
-app.use((err:any, req:Request, res:Response, next:NextFunction) => {
-  if (err.name === 'UnauthorizedError') {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-  next();
-});
+// // Custom error handling for unauthorized access
+// app.use((err:any, req:Request, res:Response, next:NextFunction) => {
+//   if (err.name === 'UnauthorizedError') {
+//     return res.status(401).json({ message: 'Unauthorized' });
+//   }
+//   next();
+// });
 
 app.listen(PORT, () => {
     console.log("Server is running on port ${PORT}...");
