@@ -2,6 +2,7 @@ FROM node:20
 WORKDIR /server/src/app
 COPY package*.json ./
 RUN npm install -g typescript
+RUN npm install
 COPY . .
 RUN npm install
 RUN npm run build
