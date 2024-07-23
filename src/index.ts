@@ -11,14 +11,12 @@ import path from 'path';
 const PORT: number = parseInt(process.env.PORT || "5000");
 const app:Application = express()
 const corsOptions = {
-  origin: ["https://task-client-fiae.onrender.com", "https://incredible-kashata-1b5e11.netlify.app"], // Allow all origins
+  origin: "https://incredible-kashata-1b5e11.netlify.app", // Allow all origins
   credentials: true, // Allow cookies to be sent
   optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
-// Serve static files from the 'dist' directory (where Vite builds the files)
-app.use(express.static(path.join(__dirname, 'build')));
 app.use(cookieParser());
 app.use(express.json());
 app.use(passport.initialize());
@@ -46,7 +44,7 @@ app.get("/user/hello", (req:Request, res:Response)=>{
 
 // Handle all other routes by serving the 'index.html' file
 app.get('*', (req:Request, res:Response) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  res.redirect("https://incredible-kashata-1b5e11.netlify.app")
 });
 
 
