@@ -18,27 +18,36 @@ const passport_google_oauth20_1 = require("passport-google-oauth20");
 const UserModel_1 = __importDefault(require("../modules/user_module/UserModel")); // Import your User model
 const cookieExtractor = (req) => {
     let token = null;
-    if (req && req.cookies) {
+    // Check if the Authorization header is present
+    if (req.headers && req.headers.authorization) {
+        const authHeader = req.headers.authorization;
+        // Extract the token from the Bearer token format
+        if (authHeader.startsWith('Bearer ')) {
+            token = authHeader.slice(7, authHeader.length); // Remove "Bearer " from the header
+        }
+    }
+    // If token not found in header, check cookies
+    if (!token && req.cookies && req.cookies['user_token']) {
         token = req.cookies['user_token'];
     }
     return token;
 };
 const opts = {
     jwtFromRequest: cookieExtractor,
-    secretOrKey: process.env.JWT_SECRET || ' ', // Use environment variable for JWT secret
+    secretOrKey: process.env.JWT_SECRET || ' ',
 };
 passport_1.default.use(new passport_jwt_1.Strategy(opts, (jwtPayload, done) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield UserModel_1.default.findById(jwtPayload.id); // Corrected: Use findById
+        const user = yield UserModel_1.default.findById(jwtPayload.id);
         if (user) {
             return done(null, user);
         }
         else {
-            return done(null, false);
+            return done(null, false, { message: 'Unauthorized' });
         }
     }
     catch (error) {
-        console.error('Error during user lookup:', error); // Add logging
+        console.error('Error during user lookup:', error);
         return done(error, false);
     }
 })));

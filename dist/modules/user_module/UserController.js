@@ -43,11 +43,12 @@ class UserAccountController {
                     password: req.body.password.trim(),
                 });
                 // Setting token cookies
-                yield authentication.headerAuthToken(res, user === null || user === void 0 ? void 0 : user._id);
+                const isToken = yield authentication.headerAuthToken(res, user === null || user === void 0 ? void 0 : user._id);
                 // Sending Success response
                 res.status(200).json({
                     success: true,
                     message: "Account created successfully",
+                    token: isToken.token,
                     user: {
                         firstName: user.firstName,
                         lastName: user.lastName,
@@ -91,6 +92,7 @@ class UserAccountController {
                 res.status(200).json({
                     success: true,
                     message: "Login successfully",
+                    token: loginToken.token,
                     user: {
                         firstName: user.firstName,
                         lastName: user.lastName,
@@ -138,6 +140,7 @@ class UserAccountController {
                 res.status(200).json({
                     success: true,
                     message: "Login successfully",
+                    token,
                     user
                 });
             }
@@ -199,7 +202,19 @@ class UserAccountController {
             }
             const user = req.user;
             const token = jsonwebtoken_1.default.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-            res.cookie('user_token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+            const jwtCookieExpiresIn = process.env.JWT_COOKIE_EXPIRES_IN;
+            if (!jwtCookieExpiresIn) {
+                throw new Error('JWT_COOKIE_EXPIRES_IN is not defined in the environment variables');
+            }
+            // Cookie validation days setup
+            const options = {
+                expires: new Date(Date.now() + parseInt(jwtCookieExpiresIn) * 24 * 60 * 1000),
+                httpOnly: true,
+                sameSite: 'None',
+                secure: true,
+            };
+            // Token setting in header
+            res.cookie("user_token", token, options);
             res.redirect(`${String(process.env.GOOGLE_TO_FRONTEND_URL)}?token=${token}`);
         });
     }

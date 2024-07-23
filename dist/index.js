@@ -12,19 +12,29 @@ const passport_1 = __importDefault(require("./utils/passport"));
 const Database_Connection_1 = __importDefault(require("./Database_Connection"));
 const UserRoutes_1 = __importDefault(require("./modules/user_module/UserRoutes"));
 const TaskRoutes_1 = __importDefault(require("./modules/todo_module/TaskRoutes"));
+const path_1 = __importDefault(require("path"));
 const PORT = parseInt(process.env.PORT || "5000");
 const app = (0, express_1.default)();
 const corsOptions = {
-    origin: 'https://task-application-client-1.onrender.com', // frontend URL
+    origin: "https://task-client-fiae.onrender.com", // Allow all origins
+    credentials: true, // Allow cookies to be sent
     optionsSuccessStatus: 200,
 };
 app.use((0, cors_1.default)(corsOptions));
+// Serve static files from the 'dist' directory (where Vite builds the files)
+app.use(express_1.default.static(path_1.default.join(__dirname, 'build')));
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
 app.use(passport_1.default.initialize());
 // Database instance creation then connecting database
 const databaseConnection = new Database_Connection_1.default();
 databaseConnection.mongodbConnection();
+// Custom error handling for unauthorized access
+app.use((err, req, res, next) => {
+    console.log(req.cookies);
+    console.log(req.url);
+    next();
+});
 app.use("/user", UserRoutes_1.default);
 app.use("/task", TaskRoutes_1.default);
 app.get("/user/hello", (req, res) => {
@@ -32,10 +42,9 @@ app.get("/user/hello", (req, res) => {
         message: "Welcome to user service"
     });
 });
-app.all("*", (req, res) => {
-    res.status(404).json({
-        error: "Resource not found"
-    });
+// Handle all other routes by serving the 'index.html' file
+app.get('*', (req, res) => {
+    res.sendFile(path_1.default.join(__dirname, 'build', 'index.html'));
 });
 app.listen(PORT, () => {
     console.log("Server is running on port ${PORT}...");

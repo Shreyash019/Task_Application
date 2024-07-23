@@ -26,38 +26,49 @@ class Auth {
         return __awaiter(this, void 0, void 0, function* () {
             // Token Generation
             const token = yield this.generateToken(user);
+            const jwtCookieExpiresIn = process.env.JWT_COOKIE_EXPIRES_IN;
+            if (!jwtCookieExpiresIn) {
+                throw new Error('JWT_COOKIE_EXPIRES_IN is not defined in the environment variables');
+            }
             // Cookie validation days setup
             const options = {
-                expires: new Date(Date.now() + parseInt(process.env.JWT_COOKIE_EXPIRES_IN) * 24 * 60 * 1000),
+                expires: new Date(Date.now() + parseInt(jwtCookieExpiresIn) * 24 * 60 * 1000),
                 httpOnly: true,
+                sameSite: 'None',
+                secure: true,
             };
             // Token setting in header
             res.cookie("user_token", token, options);
             // Return values
-            return { success: true };
+            return { success: true, token };
         });
     }
     tokenVerificationForGoogle(token) {
         return __awaiter(this, void 0, void 0, function* () {
-            // Returning if no token
-            if (!token) {
-                return {
-                    success: false,
-                    id: undefined
-                };
+            try {
+                // Returning if no token
+                if (!token) {
+                    return {
+                        success: false,
+                        id: undefined
+                    };
+                }
+                const decoded = yield jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
+                if (typeof decoded === 'string') {
+                    return {
+                        success: false,
+                        id: undefined
+                    };
+                }
+                else {
+                    return {
+                        success: true,
+                        id: decoded.id
+                    };
+                }
             }
-            const decoded = yield jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-            if (typeof decoded === 'string') {
-                return {
-                    success: false,
-                    id: undefined
-                };
-            }
-            else {
-                return {
-                    success: true,
-                    id: decoded.id
-                };
+            catch (err) {
+                return { success: false, id: 'Not valid credentials' };
             }
         });
     }
