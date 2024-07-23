@@ -6,7 +6,8 @@ import cookieParser from "cookie-parser";
 import passport from "./utils/passport"; 
 import Database_Connection from "./Database_Connection";
 import userRoutes from "./modules/user_module/UserRoutes";
-import taskRoutes from "./modules/todo_module/TaskRoutes"
+import taskRoutes from "./modules/todo_module/TaskRoutes";
+import path from 'path';
 const PORT: number = parseInt(process.env.PORT || "5000");
 const app:Application = express()
 const corsOptions = {
@@ -16,7 +17,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
+// Serve static files from the 'dist' directory (where Vite builds the files)
+app.use(express.static(path.join(__dirname, 'public', 'dist')));
 app.use(cookieParser());
 app.use(express.json());
 app.use(passport.initialize());
@@ -43,17 +45,9 @@ app.get("/user/hello", (req:Request, res:Response)=>{
 
 
 app.all("*", (req:Request, res:Response)=>{
-  res.redirect(String(process.env.REDIRECTION_URL))
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 })
 
-
-// Custom error handling for unauthorized access
-app.use((err:any, req:Request, res:Response, next:NextFunction) => {
-  if (err.name === 'UnauthorizedError') {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-  next();
-});
 
 app.listen(PORT, () => {
     console.log("Server is running on port ${PORT}...");
