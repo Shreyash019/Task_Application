@@ -205,6 +205,6 @@ export default class UserAccountController {
         };
         // Token setting in header
         res.cookie("user_token", token, options);
-        res.redirect(`${String(process.env.GOOGLE_TO_FRONTEND_URL)}/?token=${token}`);
+        res.redirect(`${String(process.env.GOOGLE_TO_FRONTEND_URL)}?token=${token}`);
     }
 }
