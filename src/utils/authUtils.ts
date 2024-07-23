@@ -9,7 +9,7 @@ export default class Auth {
         });
     }
 
-    async headerAuthToken(res: express.Response, user: string,): Promise<{ success: boolean }> {
+    async headerAuthToken(res: express.Response, user: string,): Promise<{ success: boolean, token:string }> {
         // Token Generation
         const token = await this.generateToken(user);
         const jwtCookieExpiresIn = process.env.JWT_COOKIE_EXPIRES_IN;
@@ -30,7 +30,7 @@ export default class Auth {
         res.cookie("user_token", token, options);
 
         // Return values
-        return { success: true };
+        return { success: true, token };
     }
 
     async tokenVerificationForGoogle(token:string): Promise<{success: boolean, id: string|undefined}> {

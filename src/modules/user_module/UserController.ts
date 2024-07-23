@@ -36,12 +36,13 @@ export default class UserAccountController {
             })
 
             // Setting token cookies
-            await authentication.headerAuthToken(res, user?._id);
+            const isToken  = await authentication.headerAuthToken(res, user?._id);
 
             // Sending Success response
             res.status(200).json({
                 success: true,
                 message: "Account created successfully",
+                token: isToken.token,
                 user: {
                     firstName: user.firstName,
                     lastName: user.lastName,
@@ -84,6 +85,7 @@ export default class UserAccountController {
             res.status(200).json({
                 success: true,
                 message: "Login successfully",
+                token: loginToken.token,
                 user: {
                     firstName: user.firstName,
                     lastName: user.lastName,
@@ -133,6 +135,7 @@ export default class UserAccountController {
             res.status(200).json({
                 success: true,
                 message: "Login successfully",
+                token,
                 user
             })
         } catch (err:any) {
