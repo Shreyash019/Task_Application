@@ -5,12 +5,23 @@ import User from '../modules/user_module/UserModel'; // Import your User model
 
 const cookieExtractor = (req: any) => {
   let token = null;
-  if (req && req.cookies) {
+
+  // Check if the Authorization header is present
+  if (req.headers && req.headers.authorization) {
+    const authHeader = req.headers.authorization;
+    // Extract the token from the Bearer token format
+    if (authHeader.startsWith('Bearer ')) {
+      token = authHeader.slice(7, authHeader.length); // Remove "Bearer " from the header
+    }
+  }
+
+  // If token not found in header, check cookies
+  if (!token && req.cookies && req.cookies['user_token']) {
     token = req.cookies['user_token'];
   }
+
   return token;
 };
-
 const opts: StrategyOptions = {
   jwtFromRequest: cookieExtractor,
   secretOrKey: process.env.JWT_SECRET || ' ',
