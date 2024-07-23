@@ -44,9 +44,10 @@ app.get("/user/hello", (req:Request, res:Response)=>{
 })
 
 
-app.get("*", (req:Request, res:Response)=>{
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-})
+// Handle all other routes by serving the 'index.html' file
+app.get('*', (req:Request, res:Response) => {
+  res.sendFile(path.join(__dirname, 'public', 'dist', 'index.html'));
+});
 
 
 app.listen(PORT, () => {
