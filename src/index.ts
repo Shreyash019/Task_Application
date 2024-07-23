@@ -18,7 +18,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 // Serve static files from the 'dist' directory (where Vite builds the files)
-app.use(express.static(path.join(__dirname, 'public', 'dist')));
+app.use(express.static(path.join(__dirname, 'build')));
 app.use(cookieParser());
 app.use(express.json());
 app.use(passport.initialize());
@@ -46,7 +46,7 @@ app.get("/user/hello", (req:Request, res:Response)=>{
 
 // Handle all other routes by serving the 'index.html' file
 app.get('*', (req:Request, res:Response) => {
-  res.sendFile(path.join(__dirname, 'public', 'dist', 'index.html'));
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 
