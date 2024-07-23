@@ -15,7 +15,7 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use(cookieParser());
 app.use(express.json());
@@ -43,9 +43,7 @@ app.get("/user/hello", (req:Request, res:Response)=>{
 
 
 app.all("*", (req:Request, res:Response)=>{
-  res.status(404).json({
-    message: "Not found"
-    })
+  res.redirect(String(process.env.REDIRECTION_URL))
 })
 
 
