@@ -25,6 +25,12 @@ app.use(passport.initialize());
 const databaseConnection = new Database_Connection();
 databaseConnection.mongodbConnection()
 
+
+// Custom error handling for unauthorized access
+app.use((err:any, req:Request, res:Response, next:NextFunction) => {
+  console.log(req.url)
+  next();
+});
 app.use("/user", userRoutes);
 app.use("/task", taskRoutes);
 
@@ -36,7 +42,9 @@ app.get("/user/hello", (req:Request, res:Response)=>{
 
 
 app.all("*", (req:Request, res:Response)=>{
-  res.redirect("https://task-application-client-1.onrender.com/sign-up")
+  res.status(404).json({
+    message: "Not found"
+    })
 })
 
 
@@ -45,7 +53,7 @@ app.use((err:any, req:Request, res:Response, next:NextFunction) => {
   if (err.name === 'UnauthorizedError') {
     return res.status(401).json({ message: 'Unauthorized' });
   }
-  next(err);
+  next();
 });
 
 app.listen(PORT, () => {
