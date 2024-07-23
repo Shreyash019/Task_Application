@@ -11,7 +11,7 @@ import taskRoutes from "./modules/todo_module/TaskRoutes";
 const PORT: number = parseInt(process.env.PORT || "5000");
 const app:Application = express()
 const corsOptions = {
-  origin: "https://tododragapplication.netlify.app/sign-up",
+  origin: "https://tododragapplication.netlify.app",
   credentials: true, // Allow cookies to be sent
   optionsSuccessStatus: 200,
 };
@@ -44,7 +44,7 @@ app.get("/user/hello", (req:Request, res:Response)=>{
 
 // Handle all other routes by serving the 'index.html' file
 app.get('*', (req:Request, res:Response) => {
-  res.redirect("https://incredible-kashata-1b5e11.netlify.app")
+  res.redirect("https://tododragapplication.netlify.app")
 });
 
 

@@ -15,7 +15,7 @@ const TaskRoutes_1 = __importDefault(require("./modules/todo_module/TaskRoutes")
 const PORT = parseInt(process.env.PORT || "5000");
 const app = (0, express_1.default)();
 const corsOptions = {
-    origin: "https://tododragapplication.netlify.app/sign-up",
+    origin: "https://tododragapplication.netlify.app",
     credentials: true, // Allow cookies to be sent
     optionsSuccessStatus: 200,
 };
@@ -41,7 +41,7 @@ app.get("/user/hello", (req, res) => {
 });
 // Handle all other routes by serving the 'index.html' file
 app.get('*', (req, res) => {
-    res.redirect("https://incredible-kashata-1b5e11.netlify.app");
+    res.redirect("https://tododragapplication.netlify.app");
 });
 app.listen(PORT, () => {
     console.log("Server is running on port ${PORT}...");
