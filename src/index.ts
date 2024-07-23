@@ -7,11 +7,11 @@ import passport from "./utils/passport";
 import Database_Connection from "./Database_Connection";
 import userRoutes from "./modules/user_module/UserRoutes";
 import taskRoutes from "./modules/todo_module/TaskRoutes";
-import path from 'path';
+
 const PORT: number = parseInt(process.env.PORT || "5000");
 const app:Application = express()
 const corsOptions = {
-  origin: "https://incredible-kashata-1b5e11.netlify.app", // Allow all origins
+  origin: "https://tododragapplication.netlify.app/sign-up",
   credentials: true, // Allow cookies to be sent
   optionsSuccessStatus: 200,
 };
